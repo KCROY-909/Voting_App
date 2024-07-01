@@ -1,0 +1,56 @@
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign up</title>
+    <link rel='stylesheet' href='/style.css' />
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>Sign up</h2>
+
+        
+        <div class="login_register">
+            <a href="login" class="login" target="blank">Login</a>
+            <a href="#" class="register" target="blank">SignUp</a>
+        </div>
+        <form class="form" method="post" action="/user/signup">
+            <input type="text" placeholder="Enter name" class="email" name="name">
+            <input type="number" placeholder="Enter Aadhar Card Number" class="pass" name="aadharCardNumber">  <!--confirm_pass <input type="password" placeholder="Enter Password" class="pass" name="password"> -->
+            <input type="password" placeholder="Enter Password" class="pass" name="password">
+            <input type="email" placeholder="Enter Email" class="pass" name="email">
+            <input type="number" placeholder="Enter Age" class="pass" name="age">
+            <input type="number" placeholder="Enter Mobile No." class="pass" name="mobile">
+            <input type="text" placeholder="Enter Address" class="email" name="address">
+           
+            <div id="role">
+                <label class="radio-container" >
+                    Choose Role:  &nbsp;&nbsp; 
+                    Voter
+                    <input type="radio" name="role" value="voter" checked>
+                    <span class="checkmark"></span>     </span>  &nbsp; &nbsp; &nbsp;&nbsp;
+                </label>
+                <label class="radio-container"> 
+                    Admin
+                    <input type="radio" name="role" value="admin" >
+                    <span class="checkmark">
+                </label>
+            </div>
+            <br>
+            <a href="/profile/password" class="fp">Forgot Password?</a>
+
+            <button type="submit" class="login_btn">Submit</button>
+
+        </form>
+
+        
+
+
+       
+    </div>
+
+</body>

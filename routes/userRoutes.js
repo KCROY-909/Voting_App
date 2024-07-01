@@ -4,7 +4,13 @@ const User = require('./../models/user');
 const {jwtAuthMiddleware, generateToken} = require('./../jwt');
 
 // POST route to add a person
+
+router.get('/signup', async (req, res) =>{
+    res.render("signup");
+});
+
 router.post('/signup', async (req, res) =>{
+    console.log(req.body.name);
     try{
         const data = req.body // Assuming the request body contains the User data
 
@@ -39,6 +45,7 @@ router.post('/signup', async (req, res) =>{
         const token = generateToken(payload);
 
         res.status(200).json({response: response, token: token});
+
     }
     catch(err){
         console.log(err);
@@ -47,7 +54,11 @@ router.post('/signup', async (req, res) =>{
 })
 
 // Login Route
+router.get('/login', async(req, res) => {
+    res.render("login");
+});
 router.post('/login', async(req, res) => {
+    
     try{
         // Extract aadharCardNumber and password from request body
         const {aadharCardNumber, password} = req.body;
@@ -65,11 +76,12 @@ router.post('/login', async(req, res) => {
             return res.status(401).json({error: 'Invalid Aadhar Card Number or Password'});
         }
 
-        // generate Token 
+        // generate Token //
         const payload = {
             id: user.id,
         }
         const token = generateToken(payload);
+        console.log("succesful login");
 
         // resturn token as response
         res.json({token})
@@ -91,13 +103,15 @@ router.get('/profile', jwtAuthMiddleware, async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 })
-
+router.get('/profile/password',  (req, res) => {
+    res.render('changePassword');
+})
 router.put('/profile/password', jwtAuthMiddleware, async (req, res) => {
     try {
         const userId = req.user.id; // Extract the id from the token
         const { currentPassword, newPassword } = req.body; // Extract current and new passwords from request body
 
-        // Check if currentPassword and newPassword are present in the request body
+        // Check if currentPassword and newPassword are present in the request body..
         if (!currentPassword || !newPassword) {
             return res.status(400).json({ error: 'Both currentPassword and newPassword are required' });
         }
