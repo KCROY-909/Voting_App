@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const User = require('./../models/user');
+const cookieParser = require('cookie-parser');
 const {jwtAuthMiddleware, generateToken} = require('./../jwt');
 
 // POST route to add a person
-
+router.use(cookieParser());
 router.get('/signup', async (req, res) =>{
     res.render("signup");
 });
@@ -32,19 +33,24 @@ router.post('/signup', async (req, res) =>{
         }
 
         // Create a new User document using the Mongoose model
-        const newUser = new User(data);
+        const newUser = new User(data);    //Here 'User' is the database model ,we are pushing the input data to the database model and its reference is 'newUser'
 
         // Save the new user to the database
         const response = await newUser.save();
         console.log('data saved');
 
-        const payload = {
-            id: response.id
-        }
-        console.log(JSON.stringify(payload));
-        const token = generateToken(payload);
+        // const payload = {
+        //     id: response.id
+        // }
+        // console.log(JSON.stringify(payload));
+        // const token = generateToken(payload);
 
-        res.status(200).json({response: response, token: token});
+        // res.cookie('token', token);
+
+        // res.status(200).json({response: response, token: token});
+
+
+        res.redirect('/user/login');
 
     }
     catch(err){
@@ -57,6 +63,8 @@ router.post('/signup', async (req, res) =>{
 router.get('/login', async(req, res) => {
     res.render("login");
 });
+
+
 router.post('/login', async(req, res) => {
     
     try{
@@ -83,32 +91,40 @@ router.post('/login', async(req, res) => {
         const token = generateToken(payload);
         console.log("succesful login");
 
-        // resturn token as response
-        res.json({token})
+
+        res.cookie('token', token);
+        // console.log(token);
+        
+        res.redirect('/');
+        // return token as response..
+        // res.json({token})
     }catch(err){
         console.error(err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Internal Server Error'});
     }
 });
 
-// Profile route
-router.get('/profile', jwtAuthMiddleware, async (req, res) => {
+// Profile route  
+router.get('/profile', jwtAuthMiddleware,  async (req, res) => {
     try{
         const userData = req.user;
         const userId = userData.id;
         const user = await User.findById(userId);
-        res.status(200).json({user});
+        res.render('profile', {user});
+    
+        // res.status(200).json({user});
     }catch(err){
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 })
-router.get('/profile/password',  (req, res) => {
+router.get('/profile/password',jwtAuthMiddleware,  (req, res) => {
     res.render('changePassword');
 })
-router.put('/profile/password', jwtAuthMiddleware, async (req, res) => {
+router.post('/profile/password', jwtAuthMiddleware, async (req, res) => {
     try {
         const userId = req.user.id; // Extract the id from the token
+        
         const { currentPassword, newPassword } = req.body; // Extract current and new passwords from request body
 
         // Check if currentPassword and newPassword are present in the request body..
@@ -124,6 +140,7 @@ router.put('/profile/password', jwtAuthMiddleware, async (req, res) => {
             return res.status(401).json({ error: 'Invalid current password' });
         }
 
+        
         // Update the user's password
         user.password = newPassword;
         await user.save();
@@ -135,5 +152,9 @@ router.put('/profile/password', jwtAuthMiddleware, async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+router.get('/logout',function(req,res){
+    res.clearCookie('token');   //instead of res.clearCookie('token') we can use ,res.cookie('token',null) it will override the old token
+    res.redirect('/');
+})
 
 module.exports = router;

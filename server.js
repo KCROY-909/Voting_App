@@ -6,6 +6,7 @@ const path = require('path');
 var cookieParser = require('cookie-parser');
 
 const bodyParser = require('body-parser'); 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // req.body
 const PORT = 3000;
 
@@ -19,14 +20,17 @@ app.use(cookieParser());
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-// Import the router files
+// Import the router files.
 const userRoutes = require('./routes/userRoutes');
 const candidateRoutes = require('./routes/candidateRoutes');
 
-// Use the routers
+// Use the router
 app.use('/user', userRoutes);
 app.use('/candidate', candidateRoutes);
 
+app.get('/', (req, res)=>{
+    res.render('home');
+})
 
 app.listen(PORT, ()=>{
     console.log('listening on port 3000');
