@@ -7,7 +7,7 @@ const {jwtAuthMiddleware, generateToken} = require('./../jwt');
 // POST route to add a person
 router.use(cookieParser());
 router.get('/signup', async (req, res) =>{
-    res.render("signup");
+    res.render("userViews/signup");
 });
 
 router.post('/signup', async (req, res) =>{
@@ -61,7 +61,7 @@ router.post('/signup', async (req, res) =>{
 
 // Login Route
 router.get('/login', async(req, res) => {
-    res.render("login");
+    res.render("userViews/login");
 });
 
 
@@ -95,6 +95,7 @@ router.post('/login', async(req, res) => {
         res.cookie('token', token);
         // console.log(token);
         
+
         res.redirect('/');
         // return token as response..
         // res.json({token})
@@ -110,7 +111,7 @@ router.get('/profile', jwtAuthMiddleware,  async (req, res) => {
         const userData = req.user;
         const userId = userData.id;
         const user = await User.findById(userId);
-        res.render('profile', {user});
+        res.render('userViews/profile', {user});
     
         // res.status(200).json({user});
     }catch(err){
@@ -119,7 +120,7 @@ router.get('/profile', jwtAuthMiddleware,  async (req, res) => {
     }
 })
 router.get('/profile/password',jwtAuthMiddleware,  (req, res) => {
-    res.render('changePassword');
+    res.render('userViews/changePassword');
 })
 router.post('/profile/password', jwtAuthMiddleware, async (req, res) => {
     try {
@@ -153,7 +154,8 @@ router.post('/profile/password', jwtAuthMiddleware, async (req, res) => {
     }
 });
 router.get('/logout',function(req,res){
-    res.clearCookie('token');   //instead of res.clearCookie('token') we can use ,res.cookie('token',null) it will override the old token
+    res.clearCookie('token');
+    console.log("succesfully logged out");   //instead of res.clearCookie('token') we can use ,res.cookie('token',null) it will override the old token
     res.redirect('/');
 })
 

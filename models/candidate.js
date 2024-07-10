@@ -7,6 +7,14 @@ const candidateSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    adharcardNumber: {
+        type: Number,
+        required: true,
+        unique: true
+    },
+    email:{
+        type: String
+    },
     party: {
         type: String,
         required: true
@@ -14,6 +22,9 @@ const candidateSchema = new mongoose.Schema({
     age: {  
         type: Number,
         required: true
+    },
+    partyLogo: {
+        type: String
     },
     votes: [
         {

@@ -47,7 +47,7 @@ const jwtAuthMiddleware = (req, res, next) => {
     // first check request headers has authorization or not
     const authorization = req.headers.cookie;
     
-    if(!authorization) return res.render('login'); //status(401).json({ error: 'Token Not Found' })
+    if(!authorization) return res.render('userViews/login'); //status(401).json({ error: 'Token Not Found' })
 
     // Extract the jwt token from the request headers
     // const token = req.headers.cookie.split(' ')[1].split('=')[1];;  //split(' ')[1].split('=')[1];
@@ -66,7 +66,7 @@ const jwtAuthMiddleware = (req, res, next) => {
 
     // console.log(token);
     
-    if(!token) return res.status(401).json({ error: 'Unauthorized' });
+    if(!token) return res.render('userViews/login'); // res.status(401).json({ error: 'Unauthorized' });
 
     try{
         // Verify the JWT token
@@ -78,7 +78,7 @@ const jwtAuthMiddleware = (req, res, next) => {
     }catch(err){
         //if the token gets expired
         console.error("error: 'Invalid token'");
-        res.render('login');
+        res.render('userViews/login');
         // res.status(401).json({ error: 'Invalid token' });
     }
 }

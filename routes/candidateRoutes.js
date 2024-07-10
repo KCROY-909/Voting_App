@@ -3,6 +3,21 @@ const router = express.Router();
 const User = require('../models/user');
 const {jwtAuthMiddleware, generateToken} = require('../jwt');
 const Candidate = require('../models/candidate');
+const multer = require('multer');
+
+
+//for image storage
+const storage = multer.diskStorage({
+    destination: function(req,file,cb){
+        cb(null, path.resolve(__dirname, './images'));
+    },
+    filename : function(req,file,cb){
+        cb(null,file.fieldname+"_"+Date.now()+"_"+file.originalname)
+    }
+});
+var upload = multer({
+    storage : storage
+}).single("image");
 
 
 const checkAdminRole = async (userID) => {
@@ -17,20 +32,37 @@ const checkAdminRole = async (userID) => {
 }
 
 // POST route to add a candidate
-router.post('/', jwtAuthMiddleware, async (req, res) =>{
+router.get("/",jwtAuthMiddleware,async(req,res)=>{
+    const allCandidates = await Candidate.find({});
+    // console.log(allCandidates);
+    res.render("candidateViews/candidate",{candidates:allCandidates});
+    // res.render("candidateViews/candidate");
+})
+router.get("/add",jwtAuthMiddleware,(req,res)=>{
+    console.log(req.user.session);
+    res.render("candidateViews/addCandidate");
+})
+router.post('/add', jwtAuthMiddleware,upload, async (req, res) =>{
     try{
         if(!(await checkAdminRole(req.user.id)))
             return res.status(403).json({message: 'user does not have admin role'});
 
         const data = req.body // Assuming the request body contains the candidate data
-
+        console.log("data",data);
         // Create a new User document using the Mongoose model
         const newCandidate = new Candidate(data);
 
         // Save the new user to the database
         const response = await newCandidate.save();
+
+        //To show the alert msg after adding a candidate through session
+        req.session.message = {
+            type:'success',
+            message:"Candidate added Successfully!"
+        }
         console.log('data saved');
-        res.status(200).json({response: response});
+        // res.status(200).json({response: response});
+        res.redirect(req.originalUrl);
     }
     catch(err){
         console.log(err);
@@ -38,6 +70,9 @@ router.post('/', jwtAuthMiddleware, async (req, res) =>{
     }
 })
 
+router.get("/update/:candidateID", jwtAuthMiddleware, async (req, res)=>{
+    res.send('update candidate');
+})
 router.put('/:candidateID', jwtAuthMiddleware, async (req, res)=>{
     try{
         if(!checkAdminRole(req.user.id))
@@ -148,17 +183,21 @@ router.get('/vote/count', async (req, res) => {
 });
 
 // Get List of all candidates with only name and party fields
-router.get('/', async (req, res) => {
-    try {
-        // Find all candidates and select only the name and party fields, excluding _id
-        const candidates = await Candidate.find({}, 'name party -_id');
+// router.get('/', async (req, res) => {
+//     try {
+//         // Find all candidates and select only the name and party fields, excluding _id
+//         const candidates = await Candidate.find({}, 'name party -_id');
 
-        // Return the list of candidates
-        res.status(200).json(candidates);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+//         // Return the list of candidates
+//         res.status(200).json(candidates);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
+
+router.get("/voting", async (req, res) => {
+    res.send("Voting Page");
+})
 
 module.exports = router;

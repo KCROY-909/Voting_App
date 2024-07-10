@@ -1,0 +1,52 @@
+<%- include('../candidateViews/layout/header.ejs')  %>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 mx-auto mt-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary">
+                    <h5 class="text-light">Update Details</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/candidate/add" method="put" id="add-form">
+                        <div class="mb-3">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" class="form-control form-control-lg" placeholder="Enter Name" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adharcardNumber">Adharcard Number</label>
+                            <input type="number" name="adharcardNumber" class="form-control form-control-lg" placeholder="Enter Adharcard Number" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" class="form-control form-control-lg" placeholder="Enter Email" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="name">Party</label>
+                            <input type="text" name="party" class="form-control form-control-lg" placeholder="Enter Party Name" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="age">Age</label>
+                            <input type="number" name="age" class="form-control form-control-lg" placeholder="Enter Age" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Select Logo</label>
+                            <input type="file" name="partyLogo" class="form-control form-control-lg" />
+                        </div>
+                        <div class="mb-3">
+                            <input type="submit" name="submit" value="Update User" class="btn btn-primary btn-lg" />
+                            <a href="/candidate" class="btn btn-primary btn-lg">Back to Home</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<%- include('../candidateViews/layout/footer.ejs')  %>

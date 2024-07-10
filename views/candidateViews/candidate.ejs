@@ -1,0 +1,52 @@
+<%- include('../candidateViews/layout/header.ejs') %>
+
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-1g-12">
+                <div class="table-responsive">
+                    <table class="table table-striped text-center">
+                        <thead>
+                            <tr class="table-dark">
+                                <th>ID</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>E-Mail</th>
+                                <th>Phone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%if(candidates.length > 0){%>
+                                <% for(let candidate of candidates) { %>
+
+                                <tr class="align-middle">
+                                    <td></td>
+                                    <td><img src="../images/<%=candidate.partyLogo%>" alt="Logo" width="50" class="img-thumbnail"></td>
+                                    <td> <%= candidate.name %> </td>
+                                    <td><%= candidate.email %></td>
+                                    <td><%= candidate.party %></td>
+                                    <td>
+                                        <button class="text-success"style="border: none;" title="Edit" type="button" onclick="location.href='/candidate/update/<%=candidate._id%>'"><i class="fas fa-edit fa-lg mx-1"></i></button>
+                                        <form action="/candidate/<%=candidate._id%>?_method=DELETE" method="post" style="display: inline;">
+                                        <button class="text-danger"style="border: none;" title="Delete"><i class="fas fa-trash fa-lg mx-1"></i></button></form>
+
+                                    </td>
+                                </tr>
+                                
+                            <% } } else { %>
+                                <tr>
+                                    <td colspan="6"> No candidates found </td>
+                                </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <%- include('../candidateViews/layout/footer.ejs') %>
