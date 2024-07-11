@@ -1,11 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <form action="/candidate/vote" method="get"></form>
-</body>
-</html>
+<%- include('../candidateViews/layout/header.ejs') %>
+
+
+
+
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-1g-12">
+
+                <div class="table-responsive">
+                    <table class="table table-striped text-center">
+                        <thead>
+                            <tr class="table-dark">
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Party</th>
+                                <th>Logo</th>
+                                <th></th>
+                                <th>Ballot Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%if(candidates.length> 0){ %>
+                                <% let cnt=1; %>
+                                    <% for(let candidate of candidates) { %>
+
+                                        <tr class="align-middle">
+                                            <td>
+                                                <%= cnt++ %>
+                                            </td>
+                                            <td>
+                                                <%= candidate.name %>
+                                            </td>
+                                            <td>
+                                                <%= candidate.party %>
+                                            </td>
+                                            <td><img src="../images/<%=candidate.partyLogo%>" alt="Logo" width="50"
+                                                    class="img-thumbnail"></td>
+                                            <td><i class="fa-solid fa-left-long fa-2xl" style="color: #31343a;"></i>
+                                            </td>
+                                            <td>
+
+                                                <button type="button" class="btn btn-primary  rounded-pill"
+                                                    onclick="location.href='/candidate/vote/<%=candidate._id%>'">Press
+                                                    to
+                                                    vote</button>
+                                            </td>
+                                        </tr>
+
+                                        <% } } else { %>
+                                            <tr>
+                                                <td colspan="6"> No candidates found </td>
+                                            </tr>
+                                            <%}%>
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <%- include('../candidateViews/layout/footer.ejs') %>

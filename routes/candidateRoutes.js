@@ -31,17 +31,23 @@ const checkAdminRole = async (userID) => {
    }
 }
 
-// POST route to add a candidate
+//candidate route, this is to show all the candidates in the home page of candidateRoute.js
 router.get("/",jwtAuthMiddleware,async(req,res)=>{
+    const { type, message } = req.query;
     const allCandidates = await Candidate.find({});
     // console.log(allCandidates);
-    res.render("candidateViews/candidate",{candidates:allCandidates});
-    // res.render("candidateViews/candidate");
+    res.render("candidateViews/candidate",{candidates:allCandidates,message: type && message ? { type, message } : null});
 })
-router.get("/add",jwtAuthMiddleware,(req,res)=>{
-    console.log(req.user.session);
-    res.render("candidateViews/addCandidate");
+router.get("/add",jwtAuthMiddleware,async(req,res)=>{
+    if(!(await checkAdminRole(req.user.id))){
+        return res.status(403).json({message: 'user does not have admin role'});
+    }
+
+
+    const { type, message } = req.query;
+    res.render("candidateViews/addCandidate",{ message: type && message ? { type, message } : null });
 })
+// POST route to add a candidate
 router.post('/add', jwtAuthMiddleware,upload, async (req, res) =>{
     try{
         if(!(await checkAdminRole(req.user.id)))
@@ -55,14 +61,12 @@ router.post('/add', jwtAuthMiddleware,upload, async (req, res) =>{
         // Save the new user to the database
         const response = await newCandidate.save();
 
-        //To show the alert msg after adding a candidate through session
-        req.session.message = {
-            type:'success',
-            message:"Candidate added Successfully!"
-        }
+       
         console.log('data saved');
         // res.status(200).json({response: response});
-        res.redirect(req.originalUrl);
+        const redirectUrl = `\add?type=success&message=${encodeURIComponent("Candidate added Successfully!")}`;
+        res.redirect(redirectUrl);
+        
     }
     catch(err){
         console.log(err);
@@ -71,9 +75,20 @@ router.post('/add', jwtAuthMiddleware,upload, async (req, res) =>{
 })
 
 router.get("/update/:candidateID", jwtAuthMiddleware, async (req, res)=>{
-    res.send('update candidate');
+     
+    //if the user is not admin
+     if(!(await checkAdminRole(req.user.id))){
+        if(!(await checkAdminRole(req.user.id))){
+            return res.status(403).json({message: 'user does not have admin role'});
+        }
+     }
+        
+    const userid = req.params.candidateID;
+    const user = await Candidate.findById(userid);
+    // console.log(user);
+    return res.render('candidateViews/update',{userss: user});
 })
-router.put('/:candidateID', jwtAuthMiddleware, async (req, res)=>{
+router.put('/update/:candidateID', jwtAuthMiddleware, async (req, res)=>{
     try{
         if(!checkAdminRole(req.user.id))
             return res.status(403).json({message: 'user does not have admin role'});
@@ -91,7 +106,9 @@ router.put('/:candidateID', jwtAuthMiddleware, async (req, res)=>{
         }
 
         console.log('candidate data updated');
-        res.status(200).json(response);
+        const redirectUrl = `/candidate?type=warning&message=${encodeURIComponent("Candidate data Updated Successfully!")}`;
+        res.redirect(redirectUrl);
+        // res.status(200).json(response);
     }catch(err){
         console.log(err);
         res.status(500).json({error: 'Internal Server Error'});
@@ -112,7 +129,9 @@ router.delete('/:candidateID', jwtAuthMiddleware, async (req, res)=>{
         }
 
         console.log('candidate deleted');
-        res.status(200).json(response);
+        const redirectUrl = `/candidate?type=danger&message=${encodeURIComponent("Candidate Deleted Successfully!")}`;
+        res.redirect(redirectUrl);
+        // res.status(200).json(response);
     }catch(err){
         console.log(err);
         res.status(500).json({error: 'Internal Server Error'});
@@ -131,18 +150,18 @@ router.get('/vote/:candidateID', jwtAuthMiddleware, async (req, res)=>{
         // Find the Candidate document with the specified candidateID
         const candidate = await Candidate.findById(candidateID);
         if(!candidate){
-            return res.status(404).json({ message: 'Candidate not found' });
+            return  res.render('candidateViews/complete', {message: 'Sorry!!Candidate not Found....'});//res.status(404).json({ message: 'Candidate not found' });
         }
 
         const user = await User.findById(userId);
         if(!user){
-            return res.status(404).json({ message: 'user not found' });
+            return res.render('candidateViews/complete', {message: 'Sorry!!User not Found....'});//res.status(404).json({ message: 'user not found' });
         }
         if(user.role == 'admin'){
-            return res.status(403).json({ message: 'admin is not allowed'});
+            return res.render('candidateViews/complete', {message: 'Sorry!!Admin is not Allowed to Vote....'});//res.status(403).json({ message: 'admin is not allowed'});
         }
         if(user.isVoted){
-            return res.status(400).json({ message: 'You have already voted' });
+            return res.render('candidateViews/complete', {message: 'Sorry!!You have already voted....'});//res.status(400).json({ message: 'You have already voted' });
         }
 
         // Update the Candidate document to record the vote
@@ -154,7 +173,8 @@ router.get('/vote/:candidateID', jwtAuthMiddleware, async (req, res)=>{
         user.isVoted = true
         await user.save();
 
-        return res.status(200).json({ message: 'Vote recorded successfully' });
+        console.log('vote recorded successfully');
+         return res.render('candidateViews/complete', {message: 'Vote recorded successfully....'});//res.status(200).json({ message: 'Vote recorded successfully' });
     }catch(err){
         console.log(err);
         return res.status(500).json({error: 'Internal Server Error'});
@@ -162,7 +182,7 @@ router.get('/vote/:candidateID', jwtAuthMiddleware, async (req, res)=>{
 });
 
 // vote count 
-router.get('/vote/count', async (req, res) => {
+router.get('/vote/count',jwtAuthMiddleware, async (req, res) => {
     try{
         // Find all candidates and sort them by voteCount in descending order
         const candidate = await Candidate.find().sort({voteCount: 'desc'});
@@ -196,8 +216,9 @@ router.get('/vote/count', async (req, res) => {
 //     }
 // });
 
-router.get("/voting", async (req, res) => {
-    res.send("Voting Page");
+router.get("/vote",jwtAuthMiddleware, async (req, res) => {
+    const allCandidates = await Candidate.find({});
+    res.render("candidateViews/vote", {candidates: allCandidates});
 })
 
 module.exports = router;

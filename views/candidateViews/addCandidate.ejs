@@ -5,7 +5,14 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6 mx-auto mt-4">
-           
+            
+            <% if(message) { %>
+                <div class="alert alert-dismissible fade show alert-<%= message.type %>" role="alert">
+                    <button class="btn-close close" data-dismiss="alert"  aria-label="Close"></button>
+                    
+                <strong><%= message.message %></strong>
+                </div>
+            <% } %>
 
             <div class="card shadow">
                 <div class="card-header bg-primary">
@@ -37,9 +44,9 @@
                             <label for="image" class="form-label">Select Logo</label>
                             <input type="file" name="partyLogo" class="form-control form-control-lg" />
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-6">
                             <input type="submit" name="submit" value="Add User" class="btn btn-primary btn-lg" />
-                            <a href="/candidate/add" class="btn btn-primary btn-lg">Add Another Candidate</a>
+                            <!-- <a href="/candidate/add" class="btn btn-primary btn-lg">Add Another Candidate</a> -->
                             <a href="/candidate" class="btn btn-primary btn-lg">Back to Home</a>
                         </div>
                     </form>
@@ -51,5 +58,7 @@
 
 
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 <%- include('../candidateViews/layout/footer.ejs')  %>
