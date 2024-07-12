@@ -33,6 +33,9 @@ const checkAdminRole = async (userID) => {
 
 //candidate route, this is to show all the candidates in the home page of candidateRoute.js
 router.get("/",jwtAuthMiddleware,async(req,res)=>{
+    if(!(await checkAdminRole(req.user.id))){
+        return res.render("candidateViews/complete", {message: 'Sorry!!User does not have Admin Role....'});   //res.status(403).json({message: 'user does not have admin role")//res.status(403).json({message: 'user does not have admin role'});
+    }
     const { type, message } = req.query;
     const allCandidates = await Candidate.find({});
     // console.log(allCandidates);
@@ -40,7 +43,7 @@ router.get("/",jwtAuthMiddleware,async(req,res)=>{
 })
 router.get("/add",jwtAuthMiddleware,async(req,res)=>{
     if(!(await checkAdminRole(req.user.id))){
-        return res.status(403).json({message: 'user does not have admin role'});
+         return res.status(403).json({message: 'user does not have admin role'})  ;
     }
 
 
