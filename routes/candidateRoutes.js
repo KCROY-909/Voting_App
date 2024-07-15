@@ -9,15 +9,15 @@ const multer = require('multer');
 //for image storage
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
-        cb(null, path.resolve(__dirname, './images'));
+        cb(null, './PartyLogo_images');
     },
     filename : function(req,file,cb){
-        cb(null,file.fieldname+"_"+Date.now()+"_"+file.originalname)
+        cb(null,`${Date.now()}_${file.originalname}`)
     }
 });
 var upload = multer({
     storage : storage
-}).single("image");
+}).single("partyLogo");
 
 
 const checkAdminRole = async (userID) => {
@@ -57,7 +57,14 @@ router.post('/add', jwtAuthMiddleware,upload, async (req, res) =>{
             return res.status(403).json({message: 'user does not have admin role'});
 
         const data = req.body // Assuming the request body contains the candidate data
+        
+        
+        if (req.file) {
+            data.partyLogo = req.file.filename; // This will store the new file name generated with Date.now()
+        }
+        
         console.log("data",data);
+
         // Create a new User document using the Mongoose model
         const newCandidate = new Candidate(data);
 

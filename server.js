@@ -23,6 +23,7 @@ app.use(session({
 app.use(express.json());
 app.use(express.urlencoded({extened:true}));
 app.use(express.static(path.join(__dirname,'public')))
+app.use('/partyLogo_images', express.static(path.join(__dirname,'PartyLogo_images')));
 app.use(cookieParser());
 app.use(methodOverride('_method'))
 
