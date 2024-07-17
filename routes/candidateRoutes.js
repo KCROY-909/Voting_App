@@ -30,6 +30,14 @@ const checkAdminRole = async (userID) => {
         return false;
    }
 }
+//this two route is for the case where the 
+router.get("/signup", (req, res) => {
+    res.redirect('/user/signup');
+})
+router.get("/login", (req, res) => {
+    res.redirect('/user/login');
+})
+
 
 //candidate route, this is to show all the candidates in the home page of candidateRoute.js
 router.get("/",jwtAuthMiddleware,async(req,res)=>{

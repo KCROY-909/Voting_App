@@ -10,14 +10,20 @@
 }
 
 body{
-  background-color: #2b2A36;
-  display: flex;
+  background-color: #aeadb5;
+  
+  /* display: flex; */
   justify-content: center;
   align-items: center;
 }
 
 .card{
-    margin-top: 150px;
+  
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* margin-top: 150px; */
     width: 600px;
     height: auto;
     background-color: rgb(255, 255, 255);
@@ -48,6 +54,7 @@ body{
 }
 
 .login_register a{
+  text-decoration: none;
   font-size: 1em;
   padding: 10px 55px;
   border: none;

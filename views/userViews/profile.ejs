@@ -1,32 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('../userViews/layout/header.ejs') %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
 
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-    <!-- MDB -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.min.css" rel="stylesheet" />
-
+<title>Profile</title>
     <style>
         .z-depth-3 {
             box-shadow: 0 4px 6px rgba(0.5, 0.2, 0.5, 0.6);
         }
     </style>
 
-</head>
-
-
-
 <body class="bg-light">
     <div class="container">
         <div class="row d-flex justify-content-center">
-            <div class="col-md-10 mt-5 pt-5">
+            <div class="col-md-10 mt-1 pt-5">
                 <div class="card z-depth-3">
                     <div class="row no-gutters">
                         <div class="col-sm-4 bg-info rounded-left">
@@ -86,6 +71,4 @@
     </div>
 
 
-</body>
-
-</html>
+    <%- include('../userViews/layout/footer.ejs') %>
