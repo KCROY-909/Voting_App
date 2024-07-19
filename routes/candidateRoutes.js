@@ -239,4 +239,10 @@ router.get("/vote",jwtAuthMiddleware, async (req, res) => {
     res.render("candidateViews/vote", {candidates: allCandidates});
 })
 
+
+router.get("/dashboard", async (req, res) => {    
+    res.render("candidateViews/dashboard");
+});
+
+
 module.exports = router;
