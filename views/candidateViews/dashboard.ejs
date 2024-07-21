@@ -23,14 +23,17 @@ https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 "></script>
     <script>
         const ctx = document.getElementById('myChart').getContext('2d');
-
+        let n = data.length;
+        // const label = <%-JSON.stringify(partyName)%>;
+        // let vote = <%-JSON.stringify(voteCount)%>;
         new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: label,
                 datasets: [{
                     label: '# of Votes',
                     data: [12, 19, 3, 5, 2, 3],
+                    
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',

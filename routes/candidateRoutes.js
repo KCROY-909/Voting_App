@@ -241,7 +241,14 @@ router.get("/vote",jwtAuthMiddleware, async (req, res) => {
 
 
 router.get("/dashboard", async (req, res) => {    
-    res.render("candidateViews/dashboard");
+    const allCandidates = await Candidate.find({});
+    let partyName = [];
+    let voteCount = [];
+    for(let candidate of allCandidates){
+        partyName.push(candidate.party);
+        voteCount.push(candidate.voteCount);
+    }
+    res.render("candidateViews/dashboard", {partyName: partyName, voteCount: voteCount});
 });
 
 
