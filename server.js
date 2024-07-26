@@ -14,11 +14,11 @@ const session = require('express-session');
 var methodOverride = require('method-override')
 
 
-app.use(session({
-    secret: 'lolopopo', 
-    resave: false,
-    saveUninitialized: true
-}));
+// app.use(session({
+//     secret: 'lolopopo', 
+//     resave: false,
+//     saveUninitialized: true
+// }));
 
 app.use(express.json());
 app.use(express.urlencoded({extened:true}));
